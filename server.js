@@ -1,3 +1,6 @@
+// load environment variable
+require('dotenv').config();
+
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
@@ -30,7 +33,7 @@ app.use(express.static("public"));
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 //Connect to the Mongo DB
-Mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI);
 
 // Routes
 
