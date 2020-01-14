@@ -64,7 +64,7 @@ app.get("/scrape", function(req, res){
 });
 
 // Route for gettin all Headlines from the db
-app.get("/headline", function(req, res){
+app.get("/headlines", function(req, res){
     // Finish the route so it grabs all of the headlines
     db.Headline.find({})
     .then(function(dbHeadline){
