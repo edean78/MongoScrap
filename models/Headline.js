@@ -12,10 +12,10 @@ var HeadlineSchema = new Schema({
         unique: true
     },
     // 'summary' is required and of type String
-    Summary: {
-        type: String,
-        required: true
-    },
+    // Summary: {
+    //     type: String,
+    //     required: true
+    // },
     // 'URL' is required and of type String
     url: {
         type: String,
