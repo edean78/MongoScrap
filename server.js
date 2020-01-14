@@ -2,24 +2,24 @@
 require('dotenv').config();
 
 var express = require("express");
-var logger = require("morgan");
+var morgan = require('morgan');
 var mongoose = require("mongoose");
 
 // Scrapping tools
 var axios = require("axios");
-var cheerio = require("cherrio");
+var cheerio = require("cheerio");
 
 // Require models
 var db = require("./models");
 
 // Assign a port
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 var app = express();
 
 // Use morgan logger for logging requests
-app.use(logger("dev"));
+app.use(morgan("dev"));
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
@@ -78,7 +78,7 @@ app.get("/headlines", function(req, res){
     });
 });
 
-app.get("/headline/:id", function(req, res){
+app.get("/headlines/:id", function(req, res){
     // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
     db.Headline.findOne({_id: req.params.id})
     // .. and populate all of the notes associated with it
@@ -90,7 +90,7 @@ app.get("/headline/:id", function(req, res){
 });
 
 // Route for saving/updating Headline's associated Comment
-app.post("/headline/:id", function(req, res){
+app.post("/headlines/:id", function(req, res){
     // Create a new comment and pass the req.body to the entry
     db.Comment.create(req.body).then(function(dbComment){
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
