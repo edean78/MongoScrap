@@ -4,18 +4,18 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 // Create a new UserSchema object
-var HeadlineSchema = new Schema({
+var ArticleSchema = new Schema({
     // 'headline' is required and of the type String
-    headline: {
+    article: {
         type: String,
         required: true,
         unique: true
     },
     // 'summary' is required and of type String
-    // Summary: {
-    //     type: String,
-    //     required: true
-    // },
+    Summary: {
+        type: String,
+        required: true
+    },
     // 'URL' is required and of type String
     url: {
         type: String,
@@ -24,7 +24,7 @@ var HeadlineSchema = new Schema({
     // 'comment' is an object that stores a Comment id
     // The ref property links the ObjectId to the Comment model
     // This allows us to populate tghe Article with an associated Comment
-    comment: {
+    note: {
         type: Schema.Types.ObjectId,
         ref: "Comment"
     }
