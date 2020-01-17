@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 // Using the Schema constructor, create a new Comment object
-var CommentSchema = new Schema({
+var NoteSchema = new Schema({
     // 'username' is of the type string
     title: String,
     // 'body' is of type String
@@ -12,7 +12,7 @@ var CommentSchema = new Schema({
 });
 
 // This creates our model from the above schema, using mongoose's model method
-var Comment = mongoose.model("Comment", CommentSchema);
+var Note = mongoose.model("Comment", NoteSchema);
 
 // Export the Comment model
-module.exports = Comment;
+module.exports = Note;
