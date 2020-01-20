@@ -29,8 +29,8 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 // import { Mongoose } from "mongoose";
 
-// If deployed, use the deployed database, otherwise use the local mongodbHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/BulldawgArticles";
+// If deployed, use the deployed database, otherwise use the local BulldawgArticles database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/BulldawgArticles";
 
 //Connect to the Mongo DB
 mongoose.connect(MONGODB_URI);
