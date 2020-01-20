@@ -12,7 +12,7 @@ var ArticleSchema = new Schema({
         unique: true
     },
     // 'summary' is required and of type String
-    Summary: {
+    summary: {
         type: String,
         required: true
     },
@@ -21,13 +21,17 @@ var ArticleSchema = new Schema({
         type: String,
         required: true
     },
+    date: {
+        type: Date,
+        default: Date.now
+    },
     // 'comment' is an object that stores a Comment id
     // The ref property links the ObjectId to the Comment model
     // This allows us to populate tghe Article with an associated Comment
     note: {
         type: Schema.Types.ObjectId,
-        ref: "Comment"
-    }
+        ref: "Note"
+      }
 });
 
 // This creates our model from the above schema, using mongoose's model method
