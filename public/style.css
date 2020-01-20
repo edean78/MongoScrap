@@ -1,0 +1,21 @@
+body {
+
+}
+
+.navbar {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.jumbotron {
+    margin: 10px;
+}
+
+h1.display-3 {
+    text-align: center;
+}
+
+p.lead { 
+    text-align: center;
+}
