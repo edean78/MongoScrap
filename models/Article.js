@@ -21,6 +21,10 @@ var ArticleSchema = new Schema({
         type: String,
         required: true
     },
+    saved: {
+        type: Boolean,
+        default: false
+    },
     date: {
         type: Date,
         default: Date.now
@@ -35,7 +39,7 @@ var ArticleSchema = new Schema({
 });
 
 // This creates our model from the above schema, using mongoose's model method
-var Article = mongoose.model("Headline", ArticleSchema);
+var Article = mongoose.model("Article", ArticleSchema);
 
 // Ecport the Headline model
 module.exports = Article;
