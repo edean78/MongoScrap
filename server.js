@@ -70,7 +70,7 @@ app.get("/scrape", function (req, res) {
             console.log(result.summary);
 
             // Make an object with data we scraped for this h2 and push it to the results array
-            results.push({
+            result.push({
                 title: title,
                 url: url,
                 summary: summary

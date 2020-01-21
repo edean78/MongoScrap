@@ -1,3 +1,5 @@
+
+
 // Get news by scraping Dawgnation.com
 $("#getNews").on("click", function(){
   $.ajax({
