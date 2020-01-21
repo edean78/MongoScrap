@@ -20,11 +20,11 @@ var PORT = process.env.PORT || 3000;
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
-// Make public a static folder
-app.use(express.static("public"));
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// Make public a static folder
+app.use(express.static("public"));
 
 // Use handlebars
 app.engine("handlebars", exphbs({
@@ -34,15 +34,15 @@ app.engine("handlebars", exphbs({
 app.set("view engine", "handlebars");
 
 // Connect to the Mongo DB
-var databaseURL = "mongodb://localhost:27017/mongoscrap";
+// var databaseURL = "mongodb://localhost:27017/mongoscrap";
 // If deployed, use the deployed database, otherwise use the local BulldawgArticles database
-var MONGODB_URI = process.env.MONGODB_URI || databaseURL;
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/mongoscrap";
 
 //Connect to the Mongo DB
 mongoose.connect(MONGODB_URI);
 
-// Start the server
-app.listen(PORT, function () {
+// Starting the server
+app.listen(PORT, function() {
     console.log("App running on port " + PORT + "!");
 });
 
