@@ -41,13 +41,9 @@ app.engine("handlebars", exphbs({
 }));
 app.set("view engine", "handlebars");
 
-// Start the server
-app.listen(PORT, function () {
-    console.log("App running on port " + PORT + "!");
-});
+
 
 // Routes
-
 app.get("/", function (req, res) {
     db.Article.find({"saved": false}).then(function(result){
         var hbsObject = { articles: result};
@@ -93,28 +89,55 @@ app.get("/scrape", function (req, res) {
     });
 });
 
-// Route for getting all Arcticles from the db
-app.get("/artcles", function (req, res) {
-    // Grab every everdocument in the Articles collection
-    db.Article.find({})
-        .then(function (dbArticle) {
-            // If successful, send them back to the client
-            res.json(dbArticle);
-        })
-        .catch(function (err) {
-            // If an error occurred, send it to the client
-            res.json(err);
-        });
+// // Route for getting all Arcticles from the db
+// app.get("/artcles", function (req, res) {
+//     // Grab every everdocument in the Articles collection
+//     db.Article.find({})
+//         .then(function (dbArticle) {
+//             // If successful, send them back to the client
+//             res.json(dbArticle);
+//         })
+//         .catch(function (err) {
+//             // If an error occurred, send it to the client
+//             res.json(err);
+//         });
+// });
+
+// Display saved articles
+app.get("/saved", function(req,res){
+    db.Article.find({"saved": true})
+    .populate("notes")
+    then(function(result){
+        var hbsObject = { articles: result };
+        res.render("saved", hbsObject);
+    }).catch(function(err){res.json(err)});
 });
 
+// Submit saved articles
+app.post("/saved/:id", function(res, res){
+    db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": true}})
+    .then(function(result){
+        res.json(result);
+    }).catch(function(err){res.json(err)});
+});
+
+// Unsave an article
+app.post("/delete/:id", function(req, res) {
+    db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": false}})
+    .then(function(result){
+        res.json(result);
+    }).catch(function(err) {
+        res.json(err);
+    });
+});
+
+// Populate article with a note
 app.get("/articles/:id", function (req, res) {
-    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-    db.Article.findOne({ _id: req.params.id })
-        // .. and populate all of the notes associated with it
-        .populate("note")
-        .then(function (dbArticle) {
+    db.Article.findOne({"_id": req.params.id})
+        .populate("notes")
+        .then(function (result) {
             // If successful, send it to the client
-            res.json(dbArticle);
+            res.json(result);
         })
         .catch(function (err) {
             // If an error occurred, send it to the client
@@ -129,7 +152,7 @@ app.post("/articles/:id", function (req, res) {
         // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
         // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
         // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-        return db.Article.findOneAndUpdate({ id: req.params.id }, { comment: dbNote._id }, { new: true });
+        return db.Article.findOneAndUpdate({ "_id": req.params.id }, { "notes": dbNote._id }, { new: true });
     })
         .then(function (dbArticle) {
             // If we were able to successfully update an Headline, send it back to the client
@@ -141,3 +164,18 @@ app.post("/articles/:id", function (req, res) {
         });
 });
 
+// Deletes 1 note
+app.post("/deleteNote/:id", function(req, res){
+    db.Note.remove({"_id": req.params.id})
+    .then(function(result){
+        res.json(result);
+    })
+    .catch(function(err){
+        res.json(err)
+    });
+});
+
+// Start the server
+app.listen(PORT, function () {
+    console.log("App running on port " + PORT + "!");
+});
