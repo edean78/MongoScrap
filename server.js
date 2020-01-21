@@ -101,8 +101,6 @@ app.get("/", function (req, res) {
     });
 });
 
-db.animals.find().sort({ numLegs:1 });
-
 // Route for getting all Arcticles from the db
 app.get("/articles", function (req, res) {
     // Grab every everdocument in the Articles collection
