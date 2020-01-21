@@ -1,38 +1,67 @@
-{{!-- Navbar --}}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">UGA News</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navAlt" aria-controls="navAlt"
-        aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navAlt">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/saved">Saved Articles</a>
-            </li>
-        </ul>
-    </div>
-</nav>
 {{!-- Jumbotron --}}
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
         <h1 class="display-3">University of Georgia Bulldogs Football Program latest news</h1>
-        <p class="lead">Review and add notes to your favorite articles</p>
+        <p class="lead">Review and add notes to your saved articles</p>
     </div>
 </div>
 
 {{!-- Articles --}}
 <div id="Articles">
     {{#each article}}
-        {{>articles-saved}}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-danger mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">{{this.title}}</h4>
+                    <p class="card-text">{{this.summary}}</p>
+                    <a href="{{this.url}}" target="_blank" class="card_link">{{this.url}}</a><br>
+                    <button type="button" class="btn btn-outline-danger">Remove</button>
+                    <button type="button" class="btn btn-outline-danger" data-toggle="notes"
+                        data-target="#modalNote{{this._id}}">Add or View Notes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{!-- Notes --}}
+    <div class="modal fade border-danger mb-3 modal-note" id="modalNote{{this._id}}" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Note for {{this._id}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{#if notes}}
+                    {{#each notes}}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4>Notes:</h4>
+                            <p class="previouseNotes">{{this.body}}</p>
+                            <button type="button" class="btn btn-outline-danger deleteNote"
+                                data-id="{{this._id}}">Delete</button><br>
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{else}}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>Leave a note here</h3>
+                        </div>
+                    </div>
+                    {{/if}}
+                    <div class="form-group">
+                        <textarea id="idNote{{this._id}}" class="form-control" rows="5"
+                            placeholder="Enter your note here"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger save-note" data-id={{this._id}}>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {{/each}}
 </div>
-
-{{!-- Notes --}}
-    {{#each article}}
-        {{>notes}}
-    {{/each}}

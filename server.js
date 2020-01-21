@@ -28,10 +28,7 @@ app.use(express.json());
 app.use(express.static(__dirname + "/public"));
 
 // Use handlebars
-app.engine("handlebars", exphbs({
-    defaultLayout: "main",
-    partialsDir: path.join(__dirname, "/views/partials")
-}));
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Connect to the Mongo DB
