@@ -76,7 +76,7 @@ app.get("/scrape", function (req, res) {
                 summary: summary
             });
 
-            db.Article.insert(result)
+            db.Article.create(result)
                 .then(function (dbArticle) {
                     console.log(dbArticle);
                 })
@@ -91,13 +91,17 @@ app.get("/scrape", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-    db.Article.find({ "saved": false }).then(function (result) {
-        var hbsObject = { articles: result };
-        res.render("index", hbsObject);
-    }).catch(function (err) {
-        res.json(err)
+    db.Article.find({}, null {sort: {date: -1}}, function(err, data) {
+        if(data.length === 0) {
+            res.render("placeholder", {message: "Please click button above to scrape for new articles"})
+        }
+        else {
+            res.render("index", {articles: data});
+        }
     });
 });
+
+db.animals.find().sort({ numLegs:1 });
 
 // Route for getting all Arcticles from the db
 app.get("/articles", function (req, res) {
