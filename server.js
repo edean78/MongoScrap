@@ -41,17 +41,15 @@ app.engine("handlebars", exphbs({
 }));
 app.set("view engine", "handlebars");
 
-
-
 // Routes
-app.get("/", function (req, res) {
-    db.Article.find({"saved": false}).then(function(result){
-        var hbsObject = { articles: result};
-        res.render("index", hbsObject);
-    }).catch(function(err){
-        res.json(err) 
-    });
-});
+// app.get("/", function (req, res) {
+//     db.Article.find({"saved": false}).then(function(result){
+//         var hbsObject = { articles: result};
+//         res.render("index", hbsObject);
+//     }).catch(function(err){
+//         res.json(err) 
+//     });
+// });
 
 // A GET route for scraping Fox News Website
 app.get("/scrape", function (req, res) {
@@ -67,11 +65,11 @@ app.get("/scrape", function (req, res) {
             var result = {};
 
             // Add the text and href of every link, and save them as properties of the result object
-            var article = $(element).find("h2").find("a").text().trim();
+            var title = $(element).find("h2").find("a").text().trim();
             var summary = $(element).find("p")
             var url = $(element).find("a").attr("href");
 
-            result.article = article;
+            result.title = article;
             result.summary = summary;
             result.url = url;
 
