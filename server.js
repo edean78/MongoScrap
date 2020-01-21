@@ -41,7 +41,10 @@ var MONGODB_URI = process.env.MONGODB_URI || databaseURL;
 //Connect to the Mongo DB
 mongoose.connect(MONGODB_URI);
 
-
+// Start the server
+app.listen(PORT, function () {
+    console.log("App running on port " + PORT + "!");
+});
 
 // Routes
 // app.get("/", function (req, res) {
@@ -171,7 +174,3 @@ app.post("/deleteNote/:id", function(req, res){
     });
 });
 
-// Start the server
-app.listen(PORT, function () {
-    console.log("App running on port " + PORT + "!");
-});
