@@ -1,3 +1,14 @@
+// Get news by scraping Dawgnation.com
+$("#getNews").on("click", function(){
+  $.ajax({
+    method: "GET",
+    url: "/scrape",
+  }).then(function(data){
+    console.log(data)
+    window.location = "/"
+  });
+});
+
 // Mark an article as saved
 $(".save").on("click", function(){
   var thisId = $(this).attr("data-id");
@@ -16,17 +27,6 @@ $(".delete").on("click", function(){
     method: "POST",
     url: "/delete/" + thisId
   }).then(function(dtat){
-    window.location = "/"
-  });
-});
-
-// Get news by scraping Dawgnation.com
-$("#getNews").on("click", function(){
-  $.ajax({
-    method: "GET",
-    url: "/scrape",
-  }).then(function(data){
-    console.log(data)
     window.location = "/"
   });
 });

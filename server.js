@@ -29,7 +29,7 @@ app.use(express.json());
 // Use handlebars
 app.engine("handlebars", exphbs({
     defaultLayout: "main",
-    partialsDir: path.join(__dirname, "./views/partials")
+    partialsDir: path.join(__dirname, "/views/partials")
 }));
 app.set("view engine", "handlebars");
 
@@ -71,8 +71,11 @@ app.get("/scrape", function (req, res) {
 
             // Add the text and href of every link, and save them as properties of the result object
             result.title = $(element).find("h2").find("a").text().trim();
+            console.log(result.title);
             result.summary = $(element).find("p").text().trim();
+            console.log(result.summary);
             result.url = $(element).find("h2").find("a").attr("href");
+            console.log(result.url);
 
             db.Article.create(result)
                 .then(function(dbArticle) {
@@ -88,55 +91,13 @@ app.get("/scrape", function (req, res) {
     });
 });
 
-// // Route for getting all Arcticles from the db
-// app.get("/artcles", function (req, res) {
-//     // Grab every everdocument in the Articles collection
-//     db.Article.find({})
-//         .then(function (dbArticle) {
-//             // If successful, send them back to the client
-//             res.json(dbArticle);
-//         })
-//         .catch(function (err) {
-//             // If an error occurred, send it to the client
-//             res.json(err);
-//         });
-// });
-
-// Display saved articles
-app.get("/saved", function(req,res){
-    db.Article.find({"saved": true})
-    .populate("notes")
-    then(function(result){
-        var hbsObject = { articles: result };
-        res.render("saved", hbsObject);
-    }).catch(function(err){res.json(err)});
-});
-
-// Submit saved articles
-app.post("/saved/:id", function(res, res){
-    db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": true}})
-    .then(function(result){
-        res.json(result);
-    }).catch(function(err){res.json(err)});
-});
-
-// Unsave an article
-app.post("/delete/:id", function(req, res) {
-    db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": false}})
-    .then(function(result){
-        res.json(result);
-    }).catch(function(err) {
-        res.json(err);
-    });
-});
-
-// Populate article with a note
-app.get("/articles/:id", function (req, res) {
-    db.Article.findOne({"_id": req.params.id})
-        .populate("notes")
-        .then(function (result) {
-            // If successful, send it to the client
-            res.json(result);
+// Route for getting all Arcticles from the db
+app.get("/articles", function (req, res) {
+    // Grab every everdocument in the Articles collection
+    db.Article.find({})
+        .then(function (dbArticle) {
+            // If successful, send them back to the client
+            res.json(dbArticle);
         })
         .catch(function (err) {
             // If an error occurred, send it to the client
@@ -144,33 +105,75 @@ app.get("/articles/:id", function (req, res) {
         });
 });
 
-// Route for saving/updating Headline's associated Comment
-app.post("/articles/:id", function (req, res) {
-    // Create a new comment and pass the req.body to the entry
-    db.Note.create(req.body).then(function (dbNote) {
-        // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
-        // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-        // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-        return db.Article.findOneAndUpdate({ "_id": req.params.id }, { "notes": dbNote._id }, { new: true });
-    })
-        .then(function (dbArticle) {
-            // If we were able to successfully update an Headline, send it back to the client
-            res.json(dbArticle);
-        })
-        .catch(function (err) {
-            // If an error occured, send it to the client
-            res.json(err);
-        });
-});
+// // Display saved articles
+// app.get("/saved", function(req,res){
+//     db.Article.find({"saved": true})
+//     .populate("notes")
+//     then(function(result){
+//         var hbsObject = { articles: result };
+//         res.render("saved", hbsObject);
+//     }).catch(function(err){res.json(err)});
+// });
 
-// Deletes 1 note
-app.post("/deleteNote/:id", function(req, res){
-    db.Note.remove({"_id": req.params.id})
-    .then(function(result){
-        res.json(result);
-    })
-    .catch(function(err){
-        res.json(err)
-    });
-});
+// // Submit saved articles
+// app.post("/saved/:id", function(res, res){
+//     db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": true}})
+//     .then(function(result){
+//         res.json(result);
+//     }).catch(function(err){res.json(err)});
+// });
+
+// // Unsave an article
+// app.post("/delete/:id", function(req, res) {
+//     db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": false}})
+//     .then(function(result){
+//         res.json(result);
+//     }).catch(function(err) {
+//         res.json(err);
+//     });
+// });
+
+// // Populate article with a note
+// app.get("/articles/:id", function (req, res) {
+//     db.Article.findOne({"_id": req.params.id})
+//         .populate("notes")
+//         .then(function (result) {
+//             // If successful, send it to the client
+//             res.json(result);
+//         })
+//         .catch(function (err) {
+//             // If an error occurred, send it to the client
+//             res.json(err);
+//         });
+// });
+
+// // Route for saving/updating Headline's associated Comment
+// app.post("/articles/:id", function (req, res) {
+//     // Create a new comment and pass the req.body to the entry
+//     db.Note.create(req.body).then(function (dbNote) {
+//         // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+//         // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+//         // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+//         return db.Article.findOneAndUpdate({ "_id": req.params.id }, { "notes": dbNote._id }, { new: true });
+//     })
+//         .then(function (dbArticle) {
+//             // If we were able to successfully update an Headline, send it back to the client
+//             res.json(dbArticle);
+//         })
+//         .catch(function (err) {
+//             // If an error occured, send it to the client
+//             res.json(err);
+//         });
+// });
+
+// // Deletes 1 note
+// app.post("/deleteNote/:id", function(req, res){
+//     db.Note.remove({"_id": req.params.id})
+//     .then(function(result){
+//         res.json(result);
+//     })
+//     .catch(function(err){
+//         res.json(err)
+//     });
+// });
 
