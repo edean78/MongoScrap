@@ -5,6 +5,7 @@ var logger = require('morgan');
 var mongoose = require("mongoose");
 var path = require("path");
 var exphbs = require("express-handlebars");
+var method = require("method-override");
 
 // Scrapping tools
 var axios = require("axios");
@@ -24,6 +25,7 @@ app.use(logger("dev"));
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(method("_method"));
 // Make public a static folder
 app.use(express.static(__dirname + "/public"));
 
