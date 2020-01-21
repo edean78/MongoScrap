@@ -40,7 +40,7 @@ app.set("view engine", "handlebars");
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/mongoscrap";
 
 //Connect to the Mongo DB
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Starting the server
 app.listen(PORT, function () {
