@@ -1,41 +1,39 @@
-<div id="wrapper">
-    {{!-- Navbar --}}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">UGA News</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navAlt"
-            aria-controls="navAlt" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+{{!-- Navbar --}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">UGA News</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navAlt" aria-controls="navAlt"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="collapse navbar-collapse" id="navAlt">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/saved">Saved Articles</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <button class="btn btn-secondary my-2 my-sm-0" id="getNews" type="submit">Get Dawg News!!</button>
-            </form>
-        </div>
-    </nav>
-
-    {{!-- Jumbotron --}}
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-            <h1 class="display-3">University of Georgia Bulldogs Football Program latest news</h1>
-            <p class="lead">For up to date news on the University of Georgia Football Program Click the Get Dawg News
-                button
-                above.</p>
-        </div>
+    <div class="collapse navbar-collapse" id="navAlt">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/saved">Saved Articles</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <button class="btn btn-secondary my-2 my-sm-0" id="getNews" type="submit">Get Dawg News!!</button>
+        </form>
     </div>
+</nav>
 
-    {{!-- Articles --}}
-    <div id="Articles">
-        {{#each article}}
-            {{>article}}
-        {{/each}}
+{{!-- Jumbotron --}}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-3">University of Georgia Bulldogs Football Program latest news</h1>
+        <p class="lead">For up to date news on the University of Georgia Football Program Click the Get Dawg News
+            button
+            above.</p>
     </div>
+</div>
+
+{{!-- Articles --}}
+<div id="Articles">
+    {{#each article}}
+    {{>article}}
+    {{/each}}
 </div>

@@ -2,7 +2,7 @@
 var express = require("express");
 var logger = require('morgan');
 var mongoose = require("mongoose");
-var path = require ("path");
+var path = require("path");
 var exphbs = require("express-handlebars");
 
 // Scrapping tools
@@ -42,7 +42,7 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/mongoscr
 mongoose.connect(MONGODB_URI);
 
 // Starting the server
-app.listen(PORT, function() {
+app.listen(PORT, function () {
     console.log("App running on port " + PORT + "!");
 });
 
@@ -62,15 +62,22 @@ app.get("/scrape", function (req, res) {
             var result = {};
 
             // Add the text and href of every link, and save them as properties of the result object
-            result.title = $(element).find("a").text().trim();
+            var title = $(element).find("a").text().trim();
             console.log(result.title);
-            result.url = $(element).children().attr("href");
+            var url = $(element).children().attr("href");
             console.log(result.url);
-            result.summary = $(element).siblings("p").text().trim();
+            var summary = $(element).siblings("p").text().trim();
             console.log(result.summary);
-            
+
+            // Make an object with data we scraped for this h2 and push it to the results array
+            results.push({
+                title: title,
+                url: url,
+                summary: summary
+            });
+
             db.Article.create(result)
-                .then(function(dbArticle) {
+                .then(function (dbArticle) {
                     console.log(dbArticle);
                 })
                 .catch(function (err) {
@@ -84,11 +91,11 @@ app.get("/scrape", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-    db.Article.find({"saved": false}).then(function(result){
-        var hbsObject = { articles: result};
+    db.Article.find({ "saved": false }).then(function (result) {
+        var hbsObject = { articles: result };
         res.render("index", hbsObject);
-    }).catch(function(err){
-        res.json(err) 
+    }).catch(function (err) {
+        res.json(err)
     });
 });
 
@@ -107,36 +114,36 @@ app.get("/articles", function (req, res) {
 });
 
 // Display saved articles
-app.get("/saved", function(req,res){
-    db.Article.find({"saved": true})
-    .populate("notes")
-    then(function(result){
+app.get("/saved", function (req, res) {
+    db.Article.find({ "saved": true })
+        .populate("notes")
+    then(function (result) {
         var hbsObject = { articles: result };
         res.render("saved", hbsObject);
-    }).catch(function(err){res.json(err)});
+    }).catch(function (err) { res.json(err) });
 });
 
 // Submit saved articles
-app.post("/saved/:id", function(res, res){
-    db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": true}})
-    .then(function(result){
-        res.json(result);
-    }).catch(function(err){res.json(err)});
+app.post("/saved/:id", function (res, res) {
+    db.Article.findOneAndUpdate({ "__id": req.params.id }, { "$set": { "saved": true } })
+        .then(function (result) {
+            res.json(result);
+        }).catch(function (err) { res.json(err) });
 });
 
 // Unsave an article
-app.post("/delete/:id", function(req, res) {
-    db.Article.findOneAndUpdate({"__id": req.params.id}, {"$set": {"saved": false}})
-    .then(function(result){
-        res.json(result);
-    }).catch(function(err) {
-        res.json(err);
-    });
+app.post("/delete/:id", function (req, res) {
+    db.Article.findOneAndUpdate({ "__id": req.params.id }, { "$set": { "saved": false } })
+        .then(function (result) {
+            res.json(result);
+        }).catch(function (err) {
+            res.json(err);
+        });
 });
 
 // Populate article with a note
 app.get("/articles/:id", function (req, res) {
-    db.Article.findOne({"_id": req.params.id})
+    db.Article.findOne({ "_id": req.params.id })
         .populate("notes")
         .then(function (result) {
             // If successful, send it to the client
@@ -168,13 +175,13 @@ app.post("/articles/:id", function (req, res) {
 });
 
 // Deletes 1 note
-app.post("/deleteNote/:id", function(req, res){
-    db.Note.remove({"_id": req.params.id})
-    .then(function(result){
-        res.json(result);
-    })
-    .catch(function(err){
-        res.json(err)
-    });
+app.post("/deleteNote/:id", function (req, res) {
+    db.Note.remove({ "_id": req.params.id })
+        .then(function (result) {
+            res.json(result);
+        })
+        .catch(function (err) {
+            res.json(err)
+        });
 });
 
