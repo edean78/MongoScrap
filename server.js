@@ -56,19 +56,19 @@ app.get("/scrape", function (req, res) {
         var $ = cheerio.load(response.data);
 
         // Now, we grab every h2 within an article tag, and do the following:
-        $("li.cm-stream__item").each(function (i, element) {
+        $("h2.cm-stream__headline").each(function (i, element) {
 
             // Save an empty result object
             var result = {};
 
             // Add the text and href of every link, and save them as properties of the result object
-            result.title = $(element).find("h2").find("a").text().trim();
+            result.title = $(element).find("a").text();
             console.log(result.title);
-            result.summary = $(element).find("p").text().trim();
-            console.log(result.summary);
-            result.url = $(element).find("h2").find("a").attr("href");
+            result.url = $(element).children("a").attr("href");
             console.log(result.url);
-
+            result.summary = $(element).children("p.cm-stream__intro").text();
+            console.log(result.summary);
+            
             db.Article.create(result)
                 .then(function(dbArticle) {
                     console.log(dbArticle);
