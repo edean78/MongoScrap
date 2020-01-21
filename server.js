@@ -76,7 +76,7 @@ app.get("/scrape", function (req, res) {
                 summary: summary
             });
 
-            db.Article.create(result)
+            db.Article.insert(result)
                 .then(function (dbArticle) {
                     console.log(dbArticle);
                 })
