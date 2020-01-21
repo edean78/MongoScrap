@@ -62,11 +62,11 @@ app.get("/scrape", function (req, res) {
             var result = {};
 
             // Add the text and href of every link, and save them as properties of the result object
-            result.title = $(element).find("a").text();
+            result.title = $(element).find("a").text().trim();
             console.log(result.title);
-            result.url = $(element).children("a").attr("href");
+            result.url = $(element).children().attr("href");
             console.log(result.url);
-            result.summary = $(element).children("p.cm-stream__intro").text();
+            result.summary = $(element).siblings("p").text().trim();
             console.log(result.summary);
             
             db.Article.create(result)
@@ -83,7 +83,6 @@ app.get("/scrape", function (req, res) {
     });
 });
 
-
 app.get("/", function (req, res) {
     db.Article.find({"saved": false}).then(function(result){
         var hbsObject = { articles: result};
@@ -92,8 +91,6 @@ app.get("/", function (req, res) {
         res.json(err) 
     });
 });
-
-
 
 // Route for getting all Arcticles from the db
 app.get("/articles", function (req, res) {
