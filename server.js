@@ -18,14 +18,6 @@ var app = express();
 // Assign a port
 var PORT = process.env.PORT || 3000;
 
-// Connect to the Mongo DB
-var databaseURL = "mongodb://localhost:27017/mongoscrap";
-// If deployed, use the deployed database, otherwise use the local BulldawgArticles database
-var MONGODB_URI = process.env.MONGODB_URI || databaseURL;
-
-//Connect to the Mongo DB
-mongoose.connect(MONGODB_URI);
-
 // Use morgan logger for logging requests
 app.use(logger("dev"));
 // Make public a static folder
@@ -37,9 +29,19 @@ app.use(express.json());
 // Use handlebars
 app.engine("handlebars", exphbs({
     defaultLayout: "main",
-    partialsDir: path.join(__dirname, "/views/partials")
+    partialsDir: path.join(__dirname, "./views/partials")
 }));
 app.set("view engine", "handlebars");
+
+// Connect to the Mongo DB
+var databaseURL = "mongodb://localhost:27017/mongoscrap";
+// If deployed, use the deployed database, otherwise use the local BulldawgArticles database
+var MONGODB_URI = process.env.MONGODB_URI || databaseURL;
+
+//Connect to the Mongo DB
+mongoose.connect(MONGODB_URI);
+
+
 
 // Routes
 // app.get("/", function (req, res) {
