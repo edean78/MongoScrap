@@ -1,6 +1,9 @@
+// Add Dependencies
 var express = require("express");
 var logger = require('morgan');
 var mongoose = require("mongoose");
+var path = require ("path");
+var exphbs = require("express-handlebars");
 
 // Scrapping tools
 var axios = require("axios");
@@ -8,6 +11,12 @@ var cheerio = require("cheerio");
 
 // Require models
 var db = require("./models");
+
+// Initialize Express
+var app = express();
+
+// Assign a port
+var PORT = process.env.PORT || 3000;
 
 // Connect to the Mongo DB
 var databaseURL = "mongodb://localhost:27017/mongoscrap";
@@ -17,12 +26,6 @@ var MONGODB_URI = process.env.MONGODB_URI || databaseURL;
 //Connect to the Mongo DB
 mongoose.connect(MONGODB_URI);
 
-// Initialize Express
-var app = express();
-
-// Assign a port
-var PORT = process.env.PORT || 3000;
-
 // Use morgan logger for logging requests
 app.use(logger("dev"));
 // Make public a static folder
@@ -30,6 +33,13 @@ app.use(express.static("public"));
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Use handlebars
+app.engine("handlebars", exphbs({
+    defaultLayout: "main",
+    partialsDir: path.join(__dirname, "/views/partials")
+}));
+app.set("view engine", "handlebars");
 
 // Start the server
 app.listen(PORT, function () {
@@ -39,7 +49,11 @@ app.listen(PORT, function () {
 // Routes
 
 app.get("/", function (req, res) {
-    db.Article.find({}, { sort: { created: -1 } }, function (err, data) {
+    db.Article.find({"saved": false}).then(function(result){
+        var hbsObject = { articles: result};
+        res.render("index", hbsObject);
+    }).catch(function(err){
+        res.json(err) 
     });
 });
 
