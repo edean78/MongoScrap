@@ -1,71 +1,60 @@
-// Grab the headlines as a json
-$.getJSON("/articles", function(data){
-    // For each one
-    for (var i = 0; i < data.length; i++) {
-        // Display the apropos information on the page
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].headline + "<br />" + data.[i].url + "</p>");  
-    }
-});
-
-// Whenever someone clicks a p tag
-$(document).on("click", "p", function(){
-    // Empty the comments from the comment section
-    $("#notes").empty();
-    // Save the id from the p tag
-    var thisId = $(this).attr("data-id");
-
-    // Now make an ajax call for the Headlines
-    $.ajax({
-        method: "GET",
-        url: "/articles/" + thisId
-    })
-    // With that done, add the comment information to the page
-    .then(function(data){
-        console.log(data);
-        // The title of the headline
-        $("#notes").append("<h2>" + data.headline + "</h2");
-        // An imput to enter a new title
-        $("#notes").append("<input id='titleinput' name='title' >");
-        // A textarea to add a new note body
-        $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-        // A button to submit a new note, with the id of the article saved to it
-        $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Comment</button>");
-
-        // If there's a note in the headline
-        if (data.comment) {
-            // Place the title of the note in the title input
-            $("#titleinput").val(data.comment.title);
-            // Place the body of the note in the body textarea
-            $("#bodyinput").val(data.comment.body);
-        }
-    });
-});
-
-// When you click the savenote button
-$(document).on("click", "#savenote", function() {
-    // Grab the id associated with the article from the submit button
-    var thisId = $(this).attr("data-id");
-  
-    // Run a POST request to change the note, using what's entered in the inputs
-    $.ajax({
-      method: "POST",
-      url: "/articles/" + thisId,
-      data: {
-        // Value taken from title input
-        title: $("#titleinput").val(),
-        // Value taken from note textarea
-        body: $("#bodyinput").val()
-      }
-    })
-      // With that done
-      .then(function(data) {
-        // Log the response
-        console.log(data);
-        // Empty the notes section
-        $("#notes").empty();
-      });
-  
-    // Also, remove the values entered in the input and textarea for note entry
-    $("#titleinput").val("");
-    $("#bodyinput").val("");
+// Mark an article as saved
+$(".save").on("click", function(){
+  var thisId = $(this).attr("data-id");
+  $.ajax({
+    method: "POST",
+    url:"/saved/" + thisId
+  }).then(function(data){
+    window.location = "/"
   });
+});
+
+// Remove an article from the saved articles
+$(".delete").on("click", function(){
+  var thisId = $(this).attr("data-id");
+  $.ajax({
+    method: "POST",
+    url: "/delete/" + thisId
+  }).then(function(dtat){
+    window.location = "/"
+  });
+});
+
+// Get news by scraping Dawgnation.com
+$("#getNews").on("click", function(){
+  $.ajax({
+    method: "GET",
+    url: "/scrape",
+  }).then(function(data){
+    console.log(data)
+    window.location = "/"
+  });
+});
+
+// Create Note
+$(".save-note").on("click", function(){
+  var thisId = $(this).attr("data-id");
+  $.ajax({
+    method: "POST",
+    url: "/articles/" + thisId,
+    data: {
+      body:$("#idNote" + thisId).val()
+    }
+  }).then(function(data){
+    console.log(data);
+    $("#idNote").modal("hide");
+    window.location = "/saved"
+  });
+});
+
+// Delete 1 note
+$(".deleteNote").on("click", function(){
+  var thisId = $(this).attr("data-note-id");
+  $.ajax({
+    method: "POST",
+    url: "/deleteNote/" + thisId,
+  }).then(function(data){
+    console.log(data);
+    window.location = "/saved"
+  });
+});
