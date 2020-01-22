@@ -93,7 +93,7 @@ app.get("/scrape", function (req, res) {
 app.get("/", function (req, res) {
     db.Article.find({}, null {sort: {date: -1}}, function(err, data) {
         if(data.length === 0) {
-            res.render("placeholder", {message: "Please click button above to scrape for new articles"})
+            res.render("message", {message: "Please click button above to scrape for new articles"})
         }
         else {
             res.render("index", {articles: data});
