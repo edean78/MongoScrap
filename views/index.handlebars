@@ -8,7 +8,7 @@
                     <h4 class="card-title">{{this.title}}</h4>
                     <p class="card-text">{{this.summary}}</p>
                     <a href="{{this.url}}" target="_blank" class="card_link">Link</a><br>
-                    <button type="button" class="btn btn-outline-danger save" data-id={{this._id}}>Save</button>
+                    <button type="button" class="btn btn-outline-danger save" action="/saved/{{this.id}}" method="POST" data-id={{this._id}}>Save</button>
                 </div>
             </div>
         </div>

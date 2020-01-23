@@ -40,26 +40,26 @@ var MONGODB_URI = process.env.MONGODB_URI || databaseUrl;
 //Connect to the Mongo DB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-db.on("error", function (error) {
-    console.log("Mongoose Error: ", error);
-});
+// db.on("error", function (error) {
+//     console.log("Mongoose Error: ", error);
+// });
 
-db.once("open", function () {
-    console.log("Mongoose connection successful.");
-});
+// db.once("open", function () {
+//     console.log("Mongoose connection successful.");
+// });
+
+// Routes
 
 // Display all articles
 app.get("/", function (req, res) {
     db.Article.find({}, null, {sort: {date: -1}}, function(err, data){
         if(data.length === 0) {
-            res.render
+            res.render("message", {message: "Please click Get Dawg News button to receive new articles"})
         }
-    })
-        .then(function (result) {
+        else {
             var hbsObject = { articles: result };
-            res.render("index", hbsObject);
-        }).catch(function (err) {
-            res.json(err)
+            res.render("index", hbsObject)
+        }
     });
 });
 
@@ -94,7 +94,7 @@ app.get("/scrape", function (req, res) {
                 .trim();
             console.log(result.summary);
 
-            Article.create(result)
+            db.Article.create(result)
                 .then(function (dbArticle) {
                     console.log(dbArticle);
                 })
@@ -105,7 +105,6 @@ app.get("/scrape", function (req, res) {
 
         // Send a message to the client
         console.log("Scrape Complete");
-        res.render("index", { articles: result });
         res.redirect("/");
     });
 });
@@ -161,8 +160,10 @@ app.post("/saved/:id", function (res, res) {
     db.Article.findOneAndUpdate({ "_id": req.params.id }, { "$set": { "saved": true } })
         .then(function (result) {
             res.json(result);
+            res.redirect("/saved");
         }).catch(function (err) {
-            res.json(err)
+            res.json(err);
+            res.redirect("/");
         });
 });
 
