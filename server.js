@@ -12,9 +12,6 @@ app.require("./controller/dawg_controller.js");
 // Initialize Express
 var app = express();
 
-// Require models
-var db = require("./models");
-
 // Assign a port
 var PORT = process.env.PORT || 3000;
 
