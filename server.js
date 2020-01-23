@@ -5,6 +5,8 @@ var logger = require('morgan');
 var mongoose = require("mongoose");
 var exphbs = require("express-handlebars");
 var method = require("method-override");
+var request = require("request");
+var cheerio = require("cheerio");
 mongoose.Promise = Promise;
 
 var db = require("./models");
@@ -33,12 +35,12 @@ app.use(express.static(__dirname + "/public"));
 
 // Connect to the Mongo DB
 // If deployed, use the deployed database, otherwise use the local BulldawgArticles database
-var databaseUrl = "mongodb://localhost:27017/mongoscrap";
+var databaseUrl = "mongodb://localhost:27017/scrapingArticles";
 
 var MONGODB_URI = process.env.MONGODB_URI || databaseUrl;
 
 //Connect to the Mongo DB
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 // db.on("error", function (error) {
 //     console.log("Mongoose Error: ", error);
@@ -57,7 +59,7 @@ app.get("/", function (req, res) {
             res.render("message", {message: "Please click Get Dawg News button to receive new articles"})
         }
         else {
-            var hbsObject = { articles: result };
+            var hbsObject = { articles: data };
             res.render("index", hbsObject)
         }
     });
@@ -79,20 +81,33 @@ app.get("/scrape", function (req, res) {
             var result = {};
 
             // Add the text and href of every link, and save them as properties of the result object
-            result.title = $(element)
+            var title = $(element)
                 .find("a")
                 .text()
                 .trim();
             console.log(result.title);
-            result.url = $(element)
+            var url = $(element)
                 .children()
                 .attr("href");
             console.log(result.url);
-            result.summary = $(element)
+            var summary = $(element)
                 .siblings("p")
                 .text()
                 .trim();
             console.log(result.summary);
+
+            result.title = title;
+            result.summary = summary;
+            result.url = url;
+
+            // var entry = new db.Article(result);
+            //     db.Article.find({title: result.title}, function(err, data){
+            //         if (data.length === 0) {
+            //             entry.save(function(err, data){
+            //                 if (err) throw err;
+            //             });
+            //         }
+            //     });
 
             db.Article.create(result)
                 .then(function (dbArticle) {

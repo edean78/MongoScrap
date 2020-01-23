@@ -1,16 +1,22 @@
 // Get news by scraping Dawgnation.com
 function scraping(event){
   event.preventDefault();
-}
-$("#getNews").on("click", function(){
-  $.ajax({
-    method: "GET",
-    url: "/scrape",
-  }).then(function(data){
-    console.log(data)
+  $.get("/scrape", function (data){
+    console.log(data);
     window.location = "/"
   });
-});
+};
+
+
+// $("#getNews").on("click", function(){
+//   $.ajax({
+//     method: "GET",
+//     url: "/scrape",
+//   }).then(function(data){
+//     console.log(data)
+//     window.location = "/"
+//   });
+// });
 
 // Mark an article as saved
 $(".save").on("click", function(){
@@ -61,3 +67,5 @@ $(".deleteNote").on("click", function(){
     window.location = "/saved"
   });
 });
+
+$(document).on("click", "getNews", scraping);

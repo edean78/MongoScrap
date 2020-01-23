@@ -24,6 +24,7 @@
     "express-handlebars": "^3.1.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.8.7",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "request": "^2.88.0"
   }
 }
