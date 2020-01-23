@@ -3,35 +3,36 @@ require("dotenv").config();
 var express = require("express");
 var logger = require('morgan');
 var mongoose = require("mongoose");
-var path = require("path");
 var exphbs = require("express-handlebars");
 var method = require("method-override");
 
-// Scrapping tools
-var axios = require("axios");
-var cheerio = require("cheerio");
-
-// Require models
-var db = require("./models");
+// Require routes from controller
+app.require("./controller/dawg_controller.js");
 
 // Initialize Express
 var app = express();
+
+// Require models
+var db = require("./models");
 
 // Assign a port
 var PORT = process.env.PORT || 3000;
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
+
 // Parse request body as JSON
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(method("_method"));
-// Make public a static folder
-app.use(express.static(__dirname + "/public"));
+app.use(express.urlencoded({ extended: true }));
 
 // Use handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
+
+// Method Override
+app.use(method("_method"));
+// Make public a static folder
+app.use(express.static(__dirname + "/public"));
 
 // Connect to the Mongo DB
 // var databaseURL = "mongodb://localhost:27017/mongoscrap";
