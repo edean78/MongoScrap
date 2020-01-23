@@ -1,4 +1,7 @@
 // Get news by scraping Dawgnation.com
+function scraping(event){
+  event.preventDefault();
+}
 $("#getNews").on("click", function(){
   $.ajax({
     method: "GET",

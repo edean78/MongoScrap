@@ -48,10 +48,10 @@ app.listen(PORT, function () {
 
 
 // Routes
-// A GET route for scraping Fox News Website
+// A GET route for scraping Dawgnation Website
 app.get("/scrape", function (req, res) {
     // First, we grab the body of the html with axios
-    axios.get("http://www.dawgnation.com/").then(function (response) {
+    axios.get("http://www.dawgnation.com/").then(function(response) {
         // Then, we load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(response.data);
 
@@ -62,19 +62,20 @@ app.get("/scrape", function (req, res) {
             var result = {};
 
             // Add the text and href of every link, and save them as properties of the result object
-            var title = $(element).find("a").text().trim();
+            result.title = $(element)
+                .find("a")
+                .text()
+                .trim();
             console.log(result.title);
-            var url = $(element).children().attr("href");
+            result.url = $(element)
+                .children()
+                .attr("href");
             console.log(result.url);
-            var summary = $(element).siblings("p").text().trim();
+            result.summary = $(element)
+                .siblings("p")
+                .text()
+                .trim();
             console.log(result.summary);
-
-            // Make an object with data we scraped for this h2 and push it to the results array
-            result.push({
-                title: title,
-                url: url,
-                summary: summary
-            });
 
             db.Article.create(result)
                 .then(function (dbArticle) {
@@ -86,12 +87,13 @@ app.get("/scrape", function (req, res) {
         });
 
         // Send a message to the client
-        res.send("Scrape Complete");
+        console.log("Scrape Complete");
+        res.redirect("/");
     });
 });
 
 app.get("/", function (req, res) {
-    db.Article.find({}, null {sort: {date: -1}}, function(err, data) {
+    db.Article.find({}, null, {sort: {date: -1}}, function(err, data) {
         if(data.length === 0) {
             res.render("message", {message: "Please click button above to scrape for new articles"})
         }
@@ -101,50 +103,8 @@ app.get("/", function (req, res) {
     });
 });
 
-// Route for getting all Arcticles from the db
-app.get("/articles", function (req, res) {
-    // Grab every everdocument in the Articles collection
-    db.Article.find({})
-        .then(function (dbArticle) {
-            // If successful, send them back to the client
-            res.json(dbArticle);
-        })
-        .catch(function (err) {
-            // If an error occurred, send it to the client
-            res.json(err);
-        });
-});
-
-// Display saved articles
-app.get("/saved", function (req, res) {
-    db.Article.find({ "saved": true })
-        .populate("notes")
-    then(function (result) {
-        var hbsObject = { articles: result };
-        res.render("saved", hbsObject);
-    }).catch(function (err) { res.json(err) });
-});
-
-// Submit saved articles
-app.post("/saved/:id", function (res, res) {
-    db.Article.findOneAndUpdate({ "__id": req.params.id }, { "$set": { "saved": true } })
-        .then(function (result) {
-            res.json(result);
-        }).catch(function (err) { res.json(err) });
-});
-
-// Unsave an article
-app.post("/delete/:id", function (req, res) {
-    db.Article.findOneAndUpdate({ "__id": req.params.id }, { "$set": { "saved": false } })
-        .then(function (result) {
-            res.json(result);
-        }).catch(function (err) {
-            res.json(err);
-        });
-});
-
 // Populate article with a note
-app.get("/articles/:id", function (req, res) {
+app.get("/:id", function (req, res) {
     db.Article.findOne({ "_id": req.params.id })
         .populate("notes")
         .then(function (result) {
@@ -157,8 +117,8 @@ app.get("/articles/:id", function (req, res) {
         });
 });
 
-// Route for saving/updating Headline's associated Comment
-app.post("/articles/:id", function (req, res) {
+// Route for saving/updating Headline's associated Note
+app.post("/:id", function (req, res) {
     // Create a new comment and pass the req.body to the entry
     db.Note.create(req.body).then(function (dbNote) {
         // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
@@ -172,6 +132,34 @@ app.post("/articles/:id", function (req, res) {
         })
         .catch(function (err) {
             // If an error occured, send it to the client
+            res.json(err);
+        });
+});
+
+// Display saved articles
+app.get("/saved", function (req, res) {
+    db.Article.find({ "saved": true })
+    .populate("notes")
+    .then(function (result) {
+        var hbsObject = { articles: result };
+        res.render("saved", hbsObject);
+    }).catch(function (err) { res.json(err) });
+});
+
+// Submit saved articles
+app.post("/saved/:id", function (res, res) {
+    db.Article.findOneAndUpdate({ "_id": req.params.id }, { "$set": { "saved": true } })
+        .then(function (result) {
+            res.json(result);
+        }).catch(function (err) { res.json(err) });
+});
+
+// Unsave an article
+app.post("/delete/:id", function (req, res) {
+    db.Article.findOneAndUpdate({ "_id": req.params.id }, { "$set": { "saved": false } })
+        .then(function (result) {
+            res.json(result);
+        }).catch(function (err) {
             res.json(err);
         });
 });
