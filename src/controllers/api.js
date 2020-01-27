@@ -34,13 +34,15 @@ module.exports(() => {
             })
             .then(function ($) {
                 // Create an array to hold the scraped data
-                let _articles = [];
+                let data = {
+                    _articles: []
+                };
 
                 // Now, we grab every h2 within an article tag, and do the following:
                 $("h2.cm-stream__headline").each(function (i, element) {
 
                     // Add the text and href of every link, and save them as properties of the result object
-                    _articles.push = ({
+                    data._articles.push = ({
                         title: $(element)
                             .find("a")
                             .text()
@@ -56,13 +58,13 @@ module.exports(() => {
                     });
                 });
 
-                return _articles;
+                return data;
             })
-            .then(async function (_articles) {
+            .then(async function (data) {
                 let articles_doc = [];
 
-                for (let i = 0; i < _articles.length; i++) {
-                    const el = _articles[i];
+                for (let i = 0; i < data._articles.length; i++) {
+                    const el = data._articles[i];
 
                     articles_doc.push(await Article.create(el));
                 }

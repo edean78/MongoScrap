@@ -7,7 +7,7 @@ module.exports = (() => {
     articles.get("/", (req, res) => {
         Article.find({})
         .then(data => {
-            res.render("views/index", { _articles })
+            res.render("/main", { data })
         })
         .catch(err => res.json(err))
     });
