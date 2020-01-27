@@ -42,15 +42,21 @@ var MONGODB_URI = process.env.MONGODB_URI || databaseUrl;
 //Connect to the Mongo DB
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
-// db.on("error", function (error) {
-//     console.log("Mongoose Error: ", error);
-// });
-
-// db.once("open", function () {
-//     console.log("Mongoose connection successful.");
-// });
-
 // Routes
+
+// Route for getting all Articles from the db
+// app.get("/articles", function(req, res) {
+//     // Grab every document in the Articles collection
+//     db.Article.find({}, null, {sort: {date: -1}}, function(err, data){
+//         if(data.length === 0) {
+//             res.render("message", {message: "Please click Get Dawg News button to receive new articles"})
+//         }
+//         else {
+//             var hbsObject = { articles: data };
+//             res.render("index", hbsObject)
+//         }
+//     });
+// });
 
 // Display all articles
 app.get("/", function (req, res) {
