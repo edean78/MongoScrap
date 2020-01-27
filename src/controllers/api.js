@@ -14,14 +14,13 @@ module.exports(() => {
                     res.render("message", { message: "Please click Get Dawg News button to receive new articles" })
                 }
                 else {
-                    let hbsObject = { news: data };
+                    let hbsObject = { articles: data };
                     res.render("index", hbsObject)
                 };
             })
             .catch(err => {
                 res.json(err);
             });
-
     });
 
     // A GET route for scraping Dawgnation Website
@@ -42,11 +41,10 @@ module.exports(() => {
 
                     // Add the text and href of every link, and save them as properties of the result object
                     _articles.push = ({
-                        title:
-                            $(element)
-                                .find("a")
-                                .text()
-                                .trim(),
+                        title: $(element)
+                            .find("a")
+                            .text()
+                            .trim(),
                         url: $(element)
                             .children()
                             .attr("href"),
@@ -60,10 +58,10 @@ module.exports(() => {
 
                 return _articles;
             })
-            .then(async function(_articles) {
+            .then(async function (_articles) {
                 let articles_doc = [];
 
-                for(let i = 0; i < _articles.length; i++) {
+                for (let i = 0; i < _articles.length; i++) {
                     const el = _articles[i];
 
                     articles_doc.push(await Article.create(el));
@@ -81,12 +79,12 @@ module.exports(() => {
     api.post("/note", (req, res) => {
 
         Note.create(req.body)
-        .then (dbNote => {
-            return Article.findByIdAndUpdate(req.body.article, {
-                $push: { notes: dbNote.id }
-            });
-        })
-        .then(() => res.redirect("/articles"));
+            .then(dbNote => {
+                return Article.findByIdAndUpdate(req.body.article, {
+                    $push: { notes: dbNote.id }
+                });
+            })
+            .then(() => res.redirect("/articles"));
     });
 
     return api;

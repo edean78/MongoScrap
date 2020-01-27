@@ -1,14 +1,13 @@
 const express = require("express");
-const { Article, Note } = require("../models")
+const { Article } = require("../models")
 
 module.exports = (() => {
     const articles = express.Router();
 
     articles.get("/", (req, res) => {
         Article.find({})
-        .populate("Note")
         .then(data => {
-            res.render("views/index", { data })
+            res.render("views/index", { _articles })
         })
         .catch(err => res.json(err))
     });
@@ -22,7 +21,7 @@ module.exports = (() => {
             console.log(dbReview.comments);
             res.render("views/saved", {articles: req.params.id, notes: dbArticle.notes})
         })
-    })
+    });
 
     return articles;
 })();
