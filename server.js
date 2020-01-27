@@ -1,21 +1,21 @@
 // Add Dependencies
 require("dotenv").config();
-var express = require("express");
-var logger = require('morgan');
-var mongoose = require("mongoose");
-var exphbs = require("express-handlebars");
-var method = require("method-override");
-var request = require("request");
-var cheerio = require("cheerio");
-mongoose.Promise = Promise;
-
-var db = require("./models");
-
-// Initialize Express
-var app = express();
+const express = require("express");
+const logger = require('morgan');
+const mongoose = require("mongoose");
+const exphbs = require("express-handlebars");
 
 // Assign a port
-var PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+
+// Initialize Express
+const app = express();
+
+const db = require("./models");
+
+// Use handlebars
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
@@ -24,14 +24,17 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Use handlebars
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
-
-// Method Override
-app.use(method("_method"));
 // Make public a static folder
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "./src/public"));
+
+// express routings
+let { news, api } = require("./src/controllers/index");
+app.use("/news", reviews);
+app.use("/api", api);
+
+app.use("/", (req, res) => {
+    res.redirect("/news")
+});
 
 // Connect to the Mongo DB
 // If deployed, use the deployed database, otherwise use the local BulldawgArticles database
