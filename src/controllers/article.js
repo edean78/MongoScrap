@@ -7,7 +7,7 @@ module.exports = (() => {
     articles.get("/", (req, res) => {
         Article.find({})
         .then(data => {
-            res.render("/main", { data })
+            res.render("/index", { data })
         })
         .catch(err => res.json(err))
     });
@@ -19,7 +19,7 @@ module.exports = (() => {
         .populate("Note")
         .then((dbReview) => {
             console.log(dbReview.comments);
-            res.render("views/saved", {articles: req.params.id, notes: dbArticle.notes})
+            res.render("/saved", {articles: req.params.id, notes: dbArticle.notes})
         })
     });
 
