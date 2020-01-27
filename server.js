@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 // Initialize Express
 const app = express();
 
-const db = require("./src/models");
+// const db = require("./src/models");
 
 // Use handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -60,19 +60,6 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
 //         }
 //     });
 // });
-
-// Display all articles
-app.get("/", function (req, res) {
-    db.Article.find({}, null, {sort: {date: -1}}, function(err, data){
-        if(data.length === 0) {
-            res.render("message", {message: "Please click Get Dawg News button to receive new articles"})
-        }
-        else {
-            var hbsObject = { articles: data };
-            res.render("index", hbsObject)
-        }
-    });
-});
 
 // A GET route for scraping Dawgnation Website
 app.get("/scrape", function (req, res) {
