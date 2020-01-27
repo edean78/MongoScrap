@@ -65,4 +65,4 @@ $(".deleteNote").on("click", function () {
   });
 });
 
-$(document).on("click", "getNews", scraping);
+$(document).on("click", "#getNews", scraping);

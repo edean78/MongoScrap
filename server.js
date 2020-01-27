@@ -23,11 +23,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Make public a static folder
-app.use(express.static(__dirname + "./src/public"));
+app.use(express.static("public"));
 
 // express routings
-let { article, api } = require("./src/controllers/index");
-app.use("/article", reviews);
+let { articles, api } = require("./src/controllers/index");
+app.use("/articles", articles);
 app.use("/api", api);
 
 app.use("/", (req, res) => {

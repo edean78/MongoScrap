@@ -1,4 +1,4 @@
 module.exports = { 
-    news: require("./article"),
+    articles: require("./articles"),
     api: require("./api")
  }
