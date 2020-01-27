@@ -3,7 +3,7 @@ const { Article, Note } = require("../models/index");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-module.exports(() => {
+module.exports = (() => {
     const api = express.Router();
 
     // Display all articles
