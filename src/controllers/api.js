@@ -43,14 +43,14 @@ module.exports(() => {
 
                     // Add the text and href of every link, and save them as properties of the result object
                     data._articles.push = ({
-                        title: $(element)
+                        title: $(this)
                             .find("a")
                             .text()
                             .trim(),
-                        url: $(element)
+                        url: $(this)
                             .children()
                             .attr("href"),
-                        summary: $(element)
+                        summary: $(this)
                             .siblings("p")
                             .text()
                             .trim(),
@@ -71,7 +71,7 @@ module.exports(() => {
                 return articles_doc;
             })
 
-            .then(_articles => res.json(_articles))
+            .then(data => res.json(data))
             .catch(err => {
                 res.status(400).end();
                 if (err) throw err;
