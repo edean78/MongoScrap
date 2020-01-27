@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 // Initialize Express
 const app = express();
 
-const db = require("./models");
+const db = require("./src/models");
 
 // Use handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
